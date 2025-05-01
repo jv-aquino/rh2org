@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  name      String
+  email     String    @unique
+  role      String
+  companyId String
+  company   Company   @relation(fields: [companyId], references: [id])
+  teamUsers TeamUser[]
+}
+
+model TeamUser {
+  id      String   @id @default(uuid())
+  userId  String
+  teamId  String
+  user    User     @relation(fields: [userId], references: [id])
+  team    Team     @relation(fields: [teamId], references: [id])
+}
+
+model Team {
+  id           String    @id @default(uuid())
+  type         String    // setor/time/projeto
+  name         String
+  companyId    String
+  company      Company   @relation(fields: [companyId], references: [id])
+  
+  parentTeamId String?   
+  parent       Team?     @relation("TeamHierarchy", fields: [parentTeamId], references: [id])
+  children     Team[]    @relation("TeamHierarchy")
+  
+  teamUsers    TeamUser[]
+}
+
+model Company {
+  id      String   @id @default(uuid())
+  name    String
+  teams   Team[]
+  users   User[]
+}
