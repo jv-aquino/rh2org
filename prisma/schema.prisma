@@ -13,16 +13,19 @@ model User {
   name      String
   email     String    @unique
   role      String
+
   companyId String
   company   Company   @relation(fields: [companyId], references: [id])
+
   teamUsers TeamUser[]
+  okrs      OKR[]
 }
 
 model TeamUser {
   id      String   @id @default(uuid())
   userId  String
-  teamId  String
   user    User     @relation(fields: [userId], references: [id])
+  teamId  String
   team    Team     @relation(fields: [teamId], references: [id])
 }
 
@@ -38,6 +41,7 @@ model Team {
   children     Team[]    @relation("TeamHierarchy")
   
   teamUsers    TeamUser[]
+  okrs      OKR[]
 }
 
 model Company {
@@ -45,4 +49,22 @@ model Company {
   name    String
   teams   Team[]
   users   User[]
+  okrs    OKR[]
+}
+
+model OKR {
+  id           String    @id @default(uuid())
+  type         String    // company/team/individual
+  name         String
+  value        String
+  actualValue  String
+
+  companyId    String?
+  company      Company?   @relation(fields: [companyId], references: [id])
+
+  userId  String?
+  user    User?     @relation(fields: [userId], references: [id])
+
+  teamId  String?
+  team    Team?     @relation(fields: [teamId], references: [id])
 }
