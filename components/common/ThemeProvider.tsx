@@ -39,9 +39,9 @@ function ThemeProvider({ className, children }: { className: string, children: R
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
-      <div className={`ThemeProvider ${theme} ${className}`}>
+      <body className={`ThemeProvider ${theme} ${className}`}>
         {children}
-      </div>
+      </body>
     </ThemeContext.Provider>
   );
 }

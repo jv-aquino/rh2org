@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
 import "./globals.css";
-
+import type { Metadata } from "next";
+import ThemeProvider from "@/components/common/ThemeProvider";
+import { nunito, sansation } from "./fonts";
 
 export const metadata: Metadata = {
   title: "RH²Orgânico",
@@ -14,11 +15,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body
-        className={`antialiased`}
+      <ThemeProvider
+        className={`${sansation.variable} ${nunito.variable} antialiased`}
       >
         {children}
-      </body>
+      </ThemeProvider>
     </html>
   );
 }
