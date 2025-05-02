@@ -8,8 +8,15 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { id } = await params;
+
     const company = await prisma.company.findUnique({
-      where: { id: params.id },
+      where: { id },
+      include: {
+        teams: true,
+        users: true,
+        emailDomains: true,
+      },
     });
     if (!company) {
       return NextResponse.json({ error: "Company not found" }, { status: 404 });
@@ -27,6 +34,11 @@ export async function PATCH(
   req: Request,
   { params }: { params: { id: string } }
 ) {
+  const { id } = await params;
+  if (!id) {
+    return NextResponse.json({ error: "Company ID is required" }, { status: 400 });
+  }
+
   let data: Omit<Company, "id">;
   try {
     data = await req.json();
@@ -35,27 +47,20 @@ export async function PATCH(
   }
 
   const company = await prisma.company.findUnique({
-    where: { id: params.id },
+    where: { id },
   });
   if (!company) {
     return NextResponse.json({ error: "Company not found" }, { status: 404 });
   }
 
-  if (
-      data.emailDomains &&
-      (!Array.isArray(data.emailDomains) ||
-      !data.emailDomains.every(isValidDomain))
-    ) {
-    return NextResponse.json(
-      { error: "emailDomains must be an array of valid domain strings" },
-      { status: 400 }
-    );
-  }
+  const { name } = data;
 
   try {
     const updated = await prisma.company.update({
-      where: { id: params.id },
-      data,
+      data: {
+        name
+      },
+      where: { id: params.id }
     });
     return NextResponse.json(updated);
   } catch (error) {
@@ -70,8 +75,20 @@ export async function DELETE(
   req: Request,
   { params }: { params: { id: string } }
 ) {
+  const { id } = await params;
+  
+  const company = await prisma.company.findUnique({
+    where: { id },
+  });
+  if (!company) {
+    return NextResponse.json({ error: "Company not found" }, { status: 404 });
+  }
+
   try {
-    await prisma.company.delete({ where: { id: params.id } });
+    await prisma.emailDomains.deleteMany({
+      where: { companyId: id },
+    });
+    await prisma.company.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json(

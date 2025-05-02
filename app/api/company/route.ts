@@ -4,7 +4,7 @@ import type { Company } from "@/generated/prisma";
 import { isValidDomain } from "@/utils";
 
 export async function POST(req: Request) {
-  let data: Omit<Company, "id">;
+  let data: Omit<Company & { emailDomains: string[] }, "id">;
   try {
     data = await req.json();
   } catch (err) {
@@ -19,7 +19,9 @@ export async function POST(req: Request) {
   }
   if (
     !Array.isArray(data.emailDomains) ||
-    !data.emailDomains.every(isValidDomain)
+    !data.emailDomains.every(isValidDomain) ||
+    data.emailDomains.length === 0 ||
+    data.emailDomains.some(domain => domain.length > 255)
   ) {
     return NextResponse.json(
       { error: "emailDomains must be an array of valid domain strings" },
@@ -27,9 +29,19 @@ export async function POST(req: Request) {
     );
   }
 
+  const { name, emailDomains } = data;
+
   try {
     const company = await prisma.company.create({
-      data
+      data: {
+        name,
+        emailDomains: {
+          create: emailDomains.map(domain => ({ email: domain })),
+        },
+      },  
+      include: {
+        emailDomains: true,
+      }
     });
     return NextResponse.json(company, { status: 201 });
   } catch (error) {
@@ -46,6 +58,7 @@ export async function GET() {
       include: {
         teams: true,
         users: true,
+        emailDomains: true,
       },
     });
     return NextResponse.json(companies);
