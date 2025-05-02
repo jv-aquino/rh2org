@@ -4,26 +4,67 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
+// next auth stuff
+model Account {
+  id                 String   @id @default(uuid()) @map("_id")
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.String
+  access_token       String?  @db.String
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.String
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid()) @map("_id")
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  id         String   @id @default(uuid()) @map("_id")
+  identifier String
+  token      String   @unique
+  expires    DateTime
+}
+
 model User {
-  id        String    @id @default(uuid())
-  name      String
-  email     String    @unique
-  role      String
+  id              String    @id @default(uuid()) @map("_id")
+  name            String
+  email           String    @unique
+  emailVerified   DateTime?            // requerido pelo NextAuth
+  image           String?              // requerido pelo NextAuth
+  role            String    @default("user")
 
-  companyId String
-  company   Company   @relation(fields: [companyId], references: [id])
+  companyId       String?
+  company         Company?   @relation(fields: [companyId], references: [id])
 
-  teamUsers TeamUser[]
-  okrs      OKR[]
+  teamUsers       TeamUser[]
+  okrs            OKR[]
   notifications   UserNotification[]
+  
+  accounts        Account[]
+  sessions        Session[]
 }
 
 model TeamUser {
-  id      String   @id @default(uuid())
+  id      String   @id @default(uuid()) @map("_id")
   userId  String
   user    User     @relation(fields: [userId], references: [id])
   teamId  String
@@ -31,14 +72,14 @@ model TeamUser {
 }
 
 model Team {
-  id           String    @id @default(uuid())
+  id           String    @id @default(uuid()) @map("_id")
   type         String    // setor/time/projeto
   name         String
   companyId    String
   company      Company   @relation(fields: [companyId], references: [id])
   
   parentTeamId String?   
-  parent       Team?     @relation("TeamHierarchy", fields: [parentTeamId], references: [id])
+  parent       Team?     @relation("TeamHierarchy", fields: [parentTeamId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   children     Team[]    @relation("TeamHierarchy")
   
   teamUsers    TeamUser[]
@@ -47,17 +88,24 @@ model Team {
 }
 
 model Company {
-  id             String   @id @default(uuid())
+  id             String   @id @default(uuid()) @map("_id")
   name           String
-  emailDomains   String[]
+  emailDomains   EmailDomains[]
   teams          Team[]
   users          User[]
   okrs           OKR[]
   notifications  Notification[]
 }
 
+model EmailDomains {
+  id              String    @id @default(uuid()) @map("_id")
+  email           String    @unique
+  companyId       String
+  company         Company   @relation(fields: [companyId], references: [id])
+}
+
 model OKR {
-  id           String    @id @default(uuid())
+  id           String    @id @default(uuid()) @map("_id")
   type         String    // company/team/individual
   name         String
   value        String
@@ -74,7 +122,7 @@ model OKR {
 }
 
 model Notification {
-  id        String    @id @default(uuid())
+  id        String    @id @default(uuid()) @map("_id")
   type      String
   message   String
   metadata  Json?
@@ -90,7 +138,7 @@ model Notification {
 }
 
 model UserNotification {
-  id             String     @id @default(uuid())
+  id             String     @id @default(uuid()) @map("_id")
   userId         String
   user           User       @relation(fields: [userId], references: [id])
 
