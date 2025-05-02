@@ -47,12 +47,13 @@ model Team {
 }
 
 model Company {
-  id      String   @id @default(uuid())
-  name    String
-  teams   Team[]
-  users   User[]
-  okrs    OKR[]
-  notifications   Notification[]
+  id             String   @id @default(uuid())
+  name           String
+  emailDomains   String[]
+  teams          Team[]
+  users          User[]
+  okrs           OKR[]
+  notifications  Notification[]
 }
 
 model OKR {

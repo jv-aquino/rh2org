@@ -1,6 +1,7 @@
 import prisma from "@/services/prisma";
 import { NextResponse } from "next/server";
 import type { Company } from "@/generated/prisma";
+import { isValidDomain } from "@/utils";
 
 export async function GET(
   req: Request,
@@ -38,6 +39,17 @@ export async function PATCH(
   });
   if (!company) {
     return NextResponse.json({ error: "Company not found" }, { status: 404 });
+  }
+
+  if (
+      data.emailDomains &&
+      (!Array.isArray(data.emailDomains) ||
+      !data.emailDomains.every(isValidDomain))
+    ) {
+    return NextResponse.json(
+      { error: "emailDomains must be an array of valid domain strings" },
+      { status: 400 }
+    );
   }
 
   try {
