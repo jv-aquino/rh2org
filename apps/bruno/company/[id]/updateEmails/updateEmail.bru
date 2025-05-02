@@ -1,0 +1,26 @@
+meta {
+  name: updateEmail
+  type: http
+  seq: 1
+}
+
+patch {
+  url: {{baseUrl}}/company/{{companyId}}/updateEmail
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "add": [
+      "gmail3.com"
+    ],
+    "remove": [
+      "gmail2.com"
+    ]
+  }
+}
+
+vars:post-response {
+  companyId: res.body.id
+}

@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "RH2Org",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

@@ -1,0 +1,21 @@
+meta {
+  name: update
+  type: http
+  seq: 2
+}
+
+patch {
+  url: {{baseUrl}}/company/{{companyId}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "PJ 123"
+  }
+}
+
+vars:post-response {
+  companyId: res.body.id
+}

@@ -1,0 +1,11 @@
+meta {
+  name: delete
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{baseUrl}}/company/{{companyId}}
+  body: none
+  auth: inherit
+}
