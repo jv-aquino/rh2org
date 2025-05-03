@@ -1,25 +1,36 @@
 import NextAuth from "next-auth"
+import type { Provider } from "next-auth/providers"
+import Resend from "next-auth/providers/resend"
 import Google from "next-auth/providers/google"
 import Slack from "next-auth/providers/slack"
-import prisma from "@/services/prisma";
+
 import { PrismaAdapter } from "@auth/prisma-adapter";
- 
+import prisma from "@/services/prisma";
+
+const providers: Provider[] = [
+  Resend,
+  Google,
+  Slack({
+    clientId: process.env.AUTH_SLACK_ID!,
+    clientSecret: process.env.AUTH_SLACK_SECRET!,
+    authorization: {
+      params: { scope: "users:read.email" },
+    },
+  }),
+]
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  providers,
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
   },
-  providers: [Google,
-    Slack({
-      clientId: process.env.AUTH_SLACK_ID!,
-      clientSecret: process.env.AUTH_SLACK_SECRET!,
-      authorization: {
-        params: { scope: "users:read.email" },
-      },
-    }),
-  ],
   callbacks: {
-    async signIn({ user, email }) {
+    async signIn({ user, email, account }) {
+      if (account?.provider === "resend") {
+        return true;
+      }
+      
       const userEmail = email ?? user.email;
       if (!userEmail || typeof userEmail !== 'string') return false;
     
@@ -54,14 +65,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       });
     },
   },
-})
-
-export async function handleLogin(formData: FormData) {
-  "use server";
-  const type = formData.get("type") as string;
-  if (type === "email") {
-    await signIn();
-  } else {
-    await signIn(type);
-  }
-}
+});
