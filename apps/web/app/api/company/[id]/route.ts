@@ -1,11 +1,10 @@
-import prisma from "@/services/prisma";
-import { NextResponse } from "next/server";
-import type { Company } from "@/generated/prisma";
-import { isValidDomain } from "@/utils";
+import prisma from '@/services/prisma';
+import { NextResponse } from 'next/server';
+import type { Company } from '@/generated/prisma';
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -15,16 +14,16 @@ export async function GET(
       include: {
         teams: true,
         users: true,
-        emailDomains: true,
-      },
+        emailDomains: true
+      }
     });
     if (!company) {
-      return NextResponse.json({ error: "Company not found" }, { status: 404 });
+      return NextResponse.json({ error: 'Company not found' }, { status: 404 });
     }
     return NextResponse.json(company);
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to fetch company", details: (error as Error).message },
+      { error: 'Failed to fetch company', details: (error as Error).message },
       { status: 500 }
     );
   }
@@ -32,25 +31,34 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
   if (!id) {
-    return NextResponse.json({ error: "Company ID is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: 'Company ID is required' },
+      { status: 400 }
+    );
   }
 
-  let data: Omit<Company, "id">;
+  let data: Omit<Company, 'id'>;
   try {
     data = await req.json();
   } catch (err) {
-    return NextResponse.json({ error: "Invalid or missing JSON body" }, { status: 400 });
+    return NextResponse.json(
+      {
+        error: 'Invalid or missing JSON body',
+        details: (err as Error).message
+      },
+      { status: 400 }
+    );
   }
 
   const company = await prisma.company.findUnique({
-    where: { id },
+    where: { id }
   });
   if (!company) {
-    return NextResponse.json({ error: "Company not found" }, { status: 404 });
+    return NextResponse.json({ error: 'Company not found' }, { status: 404 });
   }
 
   const { name } = data;
@@ -60,12 +68,12 @@ export async function PATCH(
       data: {
         name
       },
-      where: { id: params.id }
+      where: { id }
     });
     return NextResponse.json(updated);
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json(
-      { error: "Failed to update company", details: (error as Error).message },
+      { error: 'Failed to update company', details: (err as Error).message },
       { status: 500 }
     );
   }
@@ -73,26 +81,26 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  
+
   const company = await prisma.company.findUnique({
-    where: { id },
+    where: { id }
   });
   if (!company) {
-    return NextResponse.json({ error: "Company not found" }, { status: 404 });
+    return NextResponse.json({ error: 'Company not found' }, { status: 404 });
   }
 
   try {
     await prisma.emailDomains.deleteMany({
-      where: { companyId: id },
+      where: { companyId: id }
     });
     await prisma.company.delete({ where: { id } });
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (err) {
     return NextResponse.json(
-      { error: "Failed to delete company", details: (error as Error).message },
+      { error: 'Failed to delete company', details: (err as Error).message },
       { status: 500 }
     );
   }
