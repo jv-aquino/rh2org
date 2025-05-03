@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { useState } from 'react';
 import { Check, X } from 'lucide-react';
@@ -8,6 +9,8 @@ interface ValidatedInputProps {
   name: string;
   placeholder: string;
   type?: string;
+  value?: any;
+  setValue?: (value: any) => void;
 }
 
 function ValidatedInput({
@@ -15,8 +18,10 @@ function ValidatedInput({
   name,
   placeholder,
   type,
+  value,
+  setValue
 }: ValidatedInputProps) {
-  const [value, setValue] = useState('');
+  const [inputValue, setInputValue] = useState<string>(value || '');
   const [isValid, setIsValid] = useState<boolean | null>(null);
 
   const validate = (value: string) => {
@@ -38,10 +43,18 @@ function ValidatedInput({
     return null;
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-    setIsValid(validate(e.target.value));
-  };
+  let onChange;
+  if (value && setValue) {
+    onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setValue(e.target.value);
+      setIsValid(validate(e.target.value));
+    };
+  } else {
+    onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setInputValue(e.target.value);
+      setIsValid(validate(e.target.value));
+    };
+  }
 
   return (
     <div className={styles.container}>
@@ -55,7 +68,7 @@ function ValidatedInput({
           name={name}
           id={name}
           placeholder={placeholder}
-          value={value}
+          value={value ? value : inputValue}
           onChange={onChange}
         />
         {isValid !== null && (
