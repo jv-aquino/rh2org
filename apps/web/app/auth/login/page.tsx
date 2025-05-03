@@ -1,3 +1,4 @@
+import RHLogo from "@/components/common/RHLogo";
 import LoginForm from "./LoginForm";
 import Image from "next/image";
 
@@ -6,12 +7,7 @@ function Login() {
     <main className="h-screen overflow-y-hidden flex items-center justify-center lg:justify-between relative">
       <img src="/greenellipse.png" alt="" className="absolute left-0 -top-20 hidden lg:block w-[53%] h-[135vh]" />
       
-      <p className="absolute top-4 left-4 font-sansation lg:hidden 
-      text-green-700 text-[22px] flex items-center justify-between">
-        R<span className="text-lightBlue">H</span>
-          <Image src={'/icons/gota.png'} alt="" width={16} height={29} className="mx-1"  />
-          <span className="text-lightBlue">O</span>rg
-      </p>
+      <RHLogo className="absolute top-4 left-4 text-[22px] lg:hidden" imgClassName="mx-1" />
 
       <div className="font-sansation text-green-300 hidden
       lg:flex flex-col items-center justify-center z-10 w-[55%] h-full"> 
