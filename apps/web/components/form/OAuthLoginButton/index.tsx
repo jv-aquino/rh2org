@@ -2,7 +2,7 @@ import { handleLogin } from "@/auth";
 import clsx from "clsx";
 import Image from "next/image";
 
-function LoginButton({ type, className }: { type: 'Email' | 'Google' | 'Slack', className?: string }) { 
+function LoginButton({ type, className }: { type: 'Google' | 'Slack', className?: string }) { 
   const lowerCaseType = type.toLowerCase();
 
   return (
@@ -12,15 +12,13 @@ function LoginButton({ type, className }: { type: 'Email' | 'Google' | 'Slack', 
       >
         <input type="hidden" name="type" value={lowerCaseType} />
 
-        <button type="submit" className={clsx('login-button tracking-4', lowerCaseType, lowerCaseType === 'email' && 'text-green-700')}>
-          {type !== 'Email' && (
+        <button type="submit" className={clsx('login-button tracking-4', lowerCaseType)}>
             <Image
               src={`/icons/${lowerCaseType}logo.png`}
               alt={`${type} logo`}
               width={24}
               height={24}
             />
-          )}
 
           Entrar com {type}
         </button>

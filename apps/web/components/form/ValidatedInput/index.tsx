@@ -43,7 +43,6 @@ function ValidatedInput({
     setIsValid(validate(e.target.value));
   };
 
-
   return (
     <div className={styles.container}>
       <label className={`${styles.label} sm:text-[22px]`} htmlFor={name}>
