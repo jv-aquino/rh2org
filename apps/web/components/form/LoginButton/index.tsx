@@ -1,22 +1,17 @@
-import { signIn } from "@/auth";
+import { handleLogin } from "@/auth";
 import clsx from "clsx";
 import Image from "next/image";
 
-function LoginButton({ type }: { type: 'Email' | 'Google' | 'Slack' }) {
+function LoginButton({ type, className }: { type: 'Email' | 'Google' | 'Slack', className?: string }) { 
   const lowerCaseType = type.toLowerCase();
 
   return (
       <form
-        className="w-full flex-1"
-        action={async () => {
-          "use server"
-          if (lowerCaseType === 'email') {
-            await signIn();
-          } else {
-            await signIn(lowerCaseType);
-          }
-        }}
+        className={clsx("w-full flex-1", className)}
+        action={handleLogin}
       >
+        <input type="hidden" name="type" value={lowerCaseType} />
+
         <button type="submit" className={clsx('login-button tracking-4', lowerCaseType, lowerCaseType === 'email' && 'text-green-700')}>
           {type !== 'Email' && (
             <Image

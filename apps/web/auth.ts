@@ -55,3 +55,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
 })
+
+export async function handleLogin(formData: FormData) {
+  const type = formData.get("type") as string;
+  if (type === "email") {
+    await signIn();
+  } else {
+    await signIn(type);
+  }
+}
