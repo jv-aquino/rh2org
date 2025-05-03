@@ -26,6 +26,7 @@ body {
   background: var(--color-green-50);
   color: var(--color-green-950);
   font-family: var(--font-nunito), system-ui, -apple-system, BlinkMacSystemFont, Ubuntu, Cantarell, sans-serif;
+  letter-spacing: -2%;
 }
 
 button {
@@ -44,13 +45,17 @@ button:disabled {
   border-bottom-color: var(--color-green-800);
   border-radius: 16px;
 
-  font-size: 24px;
+  @variant sm {
+    font-size: 24px;
+  }
+  font-size: 22px;
   font-weight: 400;
 
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 16px;
+
 }
 
 .login-button.slack {

@@ -3,7 +3,7 @@ import LoginButton from '@/components/form/LoginButton';
 
 function LoginForm() {
   return (
-    <div className="w-[420px]">
+    <div className="w-full lg:w-[420px]">
       <ValidatedInput
         title="E-mail"
         placeholder="joao@acme.com.br"

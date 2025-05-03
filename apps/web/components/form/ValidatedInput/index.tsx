@@ -46,12 +46,12 @@ function ValidatedInput({
 
   return (
     <div className={styles.container}>
-      <label className={styles.label} htmlFor={name}>
+      <label className={`${styles.label} sm:text-[22px]`} htmlFor={name}>
         {title}
       </label>
       <div className={styles.input_container}>
         <input
-          className={styles.input}
+          className={`${styles.input} sm:text-[19px]`}
           type={type ?? 'text'}
           name={name}
           id={name}

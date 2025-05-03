@@ -5,22 +5,23 @@
 }
 .label {
   font-weight: 700;
-  font-size: 22px;
-  padding-bottom: 3px;
+  font-size: 20px;
+  padding-bottom: 2px;
 }
 .input_container {
   position: relative;
   display: inline-block;
 }
 .input {
-  width: 93%;
+  width: 91%;
   font-weight: 500;
-  font-size: 19px;
+  font-size: 18px;
   padding: 5px 0 6px;
 
   outline: none;
   border-bottom: 3px solid;
   border-color: var(--color-green-700);
+  color: var(--color-slate-900);
 }
 .input::placeholder {
   color: var(--color-gray-400);
