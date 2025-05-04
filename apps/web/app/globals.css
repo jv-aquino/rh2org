@@ -61,3 +61,23 @@ button:disabled {
 .login-button.slack {
   padding-right: 24px;
 }
+
+@utility opacityTransition {
+  opacity: 0%;
+  visibility: hidden;
+  transition-property: opacity, visibility;
+  transition-timing-function: ease;
+  transition-duration: 0.3s;
+}
+.opacityTransition.open {
+  visibility: visible;
+  opacity: 100%;
+}
+.opacityTransition.open.half {
+  opacity: 50%;
+}
+
+@utility textBgTransition {
+  transition-property: color background-color border;
+  transition-duration: .3s;
+}
