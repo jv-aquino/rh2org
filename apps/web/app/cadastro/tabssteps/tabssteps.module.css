@@ -1,0 +1,47 @@
+.container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stepContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.step {
+  display: flex;
+  gap: 8px;
+
+  font-size: 20px;
+  font-family: var(--font-sansation);
+  color: var(--color-gray-400);
+}
+.step.active {
+  color: var(--color-green-800);
+}
+.step.passed {
+  color: var(--color-green-200);
+}
+.number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  background-color: var(--color-gray-300);
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+
+  font-size: 18px;
+  color: var(--color-gray-500);
+}
+.number.active {
+  color: var(--color-green-900);
+  background-color: var(--color-green-200);
+}
+.number.passed {
+  background-color: var(--color-green-200);
+}
