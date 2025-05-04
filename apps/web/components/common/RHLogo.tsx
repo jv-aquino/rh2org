@@ -8,7 +8,7 @@ function RHLogo({ className, imgWidth, imgHeight, imgClassName }: {
   imgClassName?: string 
 }) {
   return ( 
-    <p className={clsx("font-sansation text-green-700 flex items-center justify-between", className)}>
+    <p className={clsx("font-sansation text-green-800 flex items-center justify-between", className)}>
       R<span className="text-lightBlue">H</span>
         <Image src={'/icons/gota.png'} alt="" width={imgWidth ?? 16} height={imgHeight ?? 29} className={imgClassName}  />
         <span className="text-lightBlue">O</span>rg
