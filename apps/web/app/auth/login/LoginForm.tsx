@@ -1,5 +1,5 @@
-import OAuthLoginButton from '@/components/form/OAuthLoginButton';
-import EmailLoginButton from '@/components/form/EmailLoginButton';
+import OAuthLoginButton from '@/components/form/login/OAuthLoginButton';
+import EmailLoginButton from '@/components/form/login/EmailLoginButton';
 
 function LoginForm() {
   return (
