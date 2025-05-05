@@ -8,7 +8,7 @@ interface TabsProps {
 
 export default function Tabs({ tab, actualComplete, setActualComplete }: TabsProps) {
   return ( 
-    <form>
+    <form className="mt-7">
       <DadosGerais />
     </form>
    );
