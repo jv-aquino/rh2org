@@ -1,4 +1,10 @@
-import { isValidDomain } from "./isValidDomain";
-import { isSafeRedirect } from "./isSafeRedirect";
+export { isValidDomain } from "./isValidDomain";
+export { isSafeRedirect } from "./isSafeRedirect";
+export { mergeClasses } from "./mergeClasses";
 
-export { isValidDomain, isSafeRedirect };
+export {
+  cnpjMask,
+  cpfMask,
+  cepMask,
+  dateMask,
+} from "./masks";

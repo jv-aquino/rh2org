@@ -10,8 +10,9 @@
   --color-green-50: #F7FDF7;
   --color-green-100: #DEF7E2;
   --color-green-200: #CAF2D2;
-  --color-green-300: #ABEDAB;
-  --color-green-500: #12871F;
+  --color-green-300: hsl(120, 65%, 80%);
+  --color-green-400: hsl(124, 74%, 59%);
+  --color-green-500: hsl(127, 76%, 30%);
   --color-green-600: hsl(135, 77%, 25%);
   --color-green-700: hsl(130, 75%, 21%);
   --color-green-800: hsl(118, 61%, 12%);
@@ -57,7 +58,6 @@ button:disabled {
   gap: 16px;
 
 }
-
 .login-button.slack {
   padding-right: 24px;
 }
@@ -80,4 +80,20 @@ button:disabled {
 @utility textBgTransition {
   transition-property: color background-color border;
   transition-duration: .3s;
+}
+
+@utility tabs-label {
+  margin-bottom: 8px;
+}
+@utility tabs-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 12px;
+  @variant focus {
+    border-color: var(--color-green-300);
+  }
+}
+@utility tabs-icon {
+  right: 8px;
 }

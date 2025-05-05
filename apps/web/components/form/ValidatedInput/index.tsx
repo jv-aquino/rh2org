@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Check, X } from 'lucide-react';
 import styles from './input.module.css';
-import { mergeClasses } from '@/utils/mergeClasses';
+import { mergeClasses } from '@/utils';
 
 interface ValidatedInputProps {
   title: string;
