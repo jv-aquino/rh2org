@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/services/prisma';
+import { validateSite } from '@/utils';
 
 interface UpdateEmailDomainsDTO {
   remove?: string[];
@@ -41,13 +42,11 @@ export async function PATCH(
   const { remove, add } = data;
 
   if (
-    (remove &&
-      (!Array.isArray(remove) ||
-        !remove.every((d) => typeof d === 'string'))) ||
-    (add && (!Array.isArray(add) || !add.every((d) => typeof d === 'string')))
+    (remove && (!Array.isArray(remove) || !remove.every((d) => typeof d === 'string' && validateSite(d))) ||
+    (add && (!Array.isArray(add) || !add.every((d) => typeof d === 'string' && validateSite(d)))))
   ) {
     return NextResponse.json(
-      { error: '`add` and `remove` must be arrays of strings' },
+      { error: '`add` and `remove` must be arrays of valid domain strings' },
       { status: 400 }
     );
   }
@@ -66,7 +65,6 @@ export async function PATCH(
   }
 
   try {
-    // Remove specified domains
     if (remove?.length) {
       await prisma.emailDomains.deleteMany({
         where: {
@@ -76,7 +74,6 @@ export async function PATCH(
       });
     }
 
-    // Add new domains (ignores duplicates by catching unique constraint errors)
     if (add?.length) {
       for (const domain of add) {
         try {

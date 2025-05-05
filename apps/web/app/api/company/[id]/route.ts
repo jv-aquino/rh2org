@@ -1,6 +1,6 @@
 import prisma from '@/services/prisma';
+import { companySchema } from '@/utils';
 import { NextResponse } from 'next/server';
-import type { Company } from '@/generated/prisma';
 
 export async function GET(
   req: Request,
@@ -41,9 +41,9 @@ export async function PATCH(
     );
   }
 
-  let data: Omit<Company, 'id'>;
+  let body: unknown;
   try {
-    data = await req.json();
+    body = await req.json();
   } catch (err) {
     return NextResponse.json(
       {
@@ -54,20 +54,22 @@ export async function PATCH(
     );
   }
 
-  const company = await prisma.company.findUnique({
-    where: { id }
-  });
-  if (!company) {
-    return NextResponse.json({ error: 'Company not found' }, { status: 404 });
+  const parsed = companySchema.partial().safeParse(
+    typeof body === 'object' && body !== null ? { ...body, emailDomains: undefined } : {}
+  );
+  if (!parsed.success) {
+    return NextResponse.json(
+      {
+        error: 'Validation failed',
+        details: parsed.error.format()
+      },
+      { status: 400 }
+    );
   }
-
-  const { name } = data;
 
   try {
     const updated = await prisma.company.update({
-      data: {
-        name
-      },
+      data: { ...parsed.data, emailDomains: undefined },
       where: { id }
     });
     return NextResponse.json(updated);
