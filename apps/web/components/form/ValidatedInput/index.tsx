@@ -10,7 +10,7 @@ interface ValidatedInputProps extends InputHTMLAttributes<HTMLInputElement> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setValue?: (value: any) => void;
   overrideValidate?: (value: string) => boolean;
-  isValid?: boolean;
+  isValid?: boolean | null;
   onValidChange?: (valid: boolean) => void;
   containerClassName?: string;
   labelClassName?: string;
