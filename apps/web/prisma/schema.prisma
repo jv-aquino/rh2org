@@ -90,6 +90,17 @@ model Team {
 model Company {
   id             String   @id @default(uuid()) @map("_id")
   name           String
+  cnpj           String
+  razaoSocial    String
+  site           String?
+
+  cep            String
+  uf             String
+  localidade     String
+  bairro         String
+  logradouro     String
+  complemento    String?
+
   emailDomains   EmailDomains[]
   teams          Team[]
   users          User[]
