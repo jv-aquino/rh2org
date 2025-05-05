@@ -56,7 +56,7 @@ model User {
   company         Company?   @relation(fields: [companyId], references: [id])
 
   teamUsers       TeamUser[]
-  okrs            OKR[]
+  objetivos            Objetivo[]
   notifications   UserNotification[]
   
   accounts        Account[]
@@ -83,8 +83,9 @@ model Team {
   children     Team[]    @relation("TeamHierarchy")
   
   teamUsers    TeamUser[]
-  okrs      OKR[]
+  objetivos      Objetivo[]
   notifications   Notification[]
+  tarefas       Tarefa[]
 }
 
 model Company {
@@ -104,7 +105,7 @@ model Company {
   emailDomains   EmailDomains[]
   teams          Team[]
   users          User[]
-  okrs           OKR[]
+  objetivos           Objetivo[]
   notifications  Notification[]
 }
 
@@ -115,22 +116,48 @@ model EmailDomains {
   company         Company   @relation(fields: [companyId], references: [id])
 }
 
-model OKR {
-  id           String    @id @default(uuid()) @map("_id")
-  scope        String    // company/team/individual
-  type         String    // nummber/boolean/%
-  name         String
-  value        String
-  actualValue  String
+model Objetivo {
+  id            String    @id @default(uuid()) @map("_id")
+  scope         String    // company/team/individual
+  name          String
+  completion    Float     
+  weight        Float
 
-  companyId    String?
-  company      Company?   @relation(fields: [companyId], references: [id])
+  companyId     String?
+  company       Company?   @relation(fields: [companyId], references: [id])
 
-  userId  String?
-  user    User?     @relation(fields: [userId], references: [id])
+  userId        String?
+  user          User?     @relation(fields: [userId], references: [id])
 
-  teamId  String?
-  team    Team?     @relation(fields: [teamId], references: [id])
+  teamId        String?
+  team          Team?     @relation(fields: [teamId], references: [id])
+
+  krs           KeyResult[]
+  tarefas       Tarefa[]
+}
+
+model KeyResult {
+  id            String    @id @default(uuid()) @map("_id")
+  name          String
+  type          String    // value / boolean / %
+  weight        Float     @default(1)
+  goal          String    
+  actualValue   String    
+
+  objetivoId    String
+  objetivo      Objetivo   @relation(fields: [objetivoId], references: [id])
+}
+
+model Tarefa {
+  id            String    @id @default(uuid()) @map("_id")
+  name          String
+  state         String    @default("A Fazer")
+  
+  objetivoId    String?
+  objetivo      Objetivo?   @relation(fields: [objetivoId], references: [id])
+
+  teamId        String?
+  team          Team?   @relation(fields: [teamId], references: [id])
 }
 
 model Notification {
