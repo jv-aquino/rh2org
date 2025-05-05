@@ -82,6 +82,13 @@ button:disabled {
   transition-duration: .3s;
 }
 
+@utility optional-label {
+  color: var(--color-gray-400);
+  font-size: 16px;
+  font-style: italic;
+  margin-left: 4px;
+}
+
 @utility tabs-label {
   margin-bottom: 8px;
 }
