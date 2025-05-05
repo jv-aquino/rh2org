@@ -1,4 +1,4 @@
-export const validateSite = (value: string) => {
+export const isValidSite = (value: string) => {
   // Prepend "https://" if no protocol is provided
   if (!/^https?:\/\//i.test(value)) {
     value = `https://${value}`;
