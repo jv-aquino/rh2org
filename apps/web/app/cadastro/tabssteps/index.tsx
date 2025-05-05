@@ -41,7 +41,7 @@ export default function TabsSteps({ tab }: TabsStepsProps) {
                 >
                   {stepNum}
                 </span>
-                {label}
+                <span className="hidden md:inline">{label}</span>
               </p>
             </div>
             {stepNum < steps.length && (

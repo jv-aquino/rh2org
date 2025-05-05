@@ -1,7 +1,8 @@
 'use client';
 import { useState } from "react";
-import TabsSteps from "./tabssteps";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import TabsSteps from "./tabssteps";
+import Tabs from "./tabs";
 
 function CadastroPage() {
   const [tab, setTab] = useState(1);
@@ -12,6 +13,8 @@ function CadastroPage() {
       <div className="px-3 sm:px-6 md:px-0">
         <TabsSteps tab={tab} />
       </div>
+
+      <Tabs tab={tab} actualComplete={actualComplete} setActualComplete={setActualComplete} />
 
       <div className="mt-4 flex justify-between items-center">
         <button type="button" disabled={tab === 1}  className={`opacityTransition ${tab === 1 ? '' : 'open'}`}
