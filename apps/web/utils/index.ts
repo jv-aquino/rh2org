@@ -1,6 +1,6 @@
-export { isValidDomain } from "./isValidDomain";
-export { isSafeRedirect } from "./isSafeRedirect";
 export { mergeClasses } from "./mergeClasses";
+export { isValidDomain, isValidCNPJ, isSafeRedirect } from "./isValid";
+export { validateSite, validateEmailDomain } from './validations'
 
 export {
   cnpjMask,
