@@ -117,7 +117,8 @@ model EmailDomains {
 
 model OKR {
   id           String    @id @default(uuid()) @map("_id")
-  type         String    // company/team/individual
+  scope        String    // company/team/individual
+  type         String    // nummber/boolean/%
   name         String
   value        String
   actualValue  String
