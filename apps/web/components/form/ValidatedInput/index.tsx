@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Check, X } from 'lucide-react';
 import styles from './input.module.css';
+import { mergeClasses } from '@/utils/mergeClasses';
 
 interface ValidatedInputProps {
   title: string;
@@ -11,6 +12,12 @@ interface ValidatedInputProps {
   type?: string;
   value?: any;
   setValue?: (value: any) => void;
+  overrideValidate?: (value: string) => boolean;
+  containerClassName?: string;
+  labelClassName?: string;
+  inputContainerClassName?: string;
+  inputClassName?: string;
+  iconContainerClassName?: string;
 }
 
 function ValidatedInput({
@@ -19,29 +26,40 @@ function ValidatedInput({
   placeholder,
   type,
   value,
-  setValue
+  setValue,
+  overrideValidate,
+  containerClassName,
+  labelClassName,
+  inputContainerClassName,
+  inputClassName,
+  iconContainerClassName,
 }: ValidatedInputProps) {
   const [inputValue, setInputValue] = useState<string>(value || '');
   const [isValid, setIsValid] = useState<boolean | null>(null);
 
-  const validate = (value: string) => {
-    if (type === 'email') {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(value);
-    }
-    if (type === 'password') {
-      const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-      return passwordRegex.test(value);
-    }
-    if (type === 'phone') {
-      const phoneRegex = /^\+?[1-9]\d{1,14}$/;
-      return phoneRegex.test(value);
-    }
-    if (type === 'text') {
-      return value.trim().length > 0;
-    }
-    return null;
-  };
+  let validate: (value: string) => boolean;
+  if (overrideValidate) {
+    validate = overrideValidate;
+  } else {
+    validate = (value) => {
+      if (type === 'email') {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(value);
+      }
+      if (type === 'password') {
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        return passwordRegex.test(value);
+      }
+      if (type === 'phone') {
+        const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+        return phoneRegex.test(value);
+      }
+      if (type === 'text') {
+        return value.trim().length > 0;
+      }
+      return true;
+    };
+  }
 
   let onChange;
   if (value && setValue) {
@@ -57,13 +75,13 @@ function ValidatedInput({
   }
 
   return (
-    <div className={styles.container}>
-      <label className={`${styles.label} sm:text-[22px]`} htmlFor={name}>
+    <div className={mergeClasses("flex flex-col", containerClassName)}>
+      <label className={mergeClasses("text-lg font-medium", labelClassName)} htmlFor={name}>
         {title}
       </label>
-      <div className={styles.input_container}>
+      <div className={mergeClasses("relative inline-block", inputContainerClassName)}>
         <input
-          className={`${styles.input} sm:text-[19px]`}
+          className={mergeClasses("outline-none text-slate-900 placeholder:text-gray-400", inputClassName)}
           type={type ?? 'text'}
           name={name}
           id={name}
@@ -72,7 +90,7 @@ function ValidatedInput({
           onChange={onChange}
         />
         {isValid !== null && (
-          <span className={styles.icon_container}>
+          <span className={mergeClasses(styles.icon_container + " right-0", iconContainerClassName)}>
             {isValid ? (
               <Check className={`${styles.icon} ${styles.icon_valid}`} />
             ) : (

@@ -28,6 +28,9 @@ function EmailLoginButton() {
           type="email"
           value={email}
           setValue={setEmail}
+          containerClassName='mb-8'
+          inputClassName='w-[91%] pt-[5px] pb-1.5 text-lg border-b-[3px] border-green-700'
+          labelClassName='text-lg sm:text-[22px] font-bold'
         />
         
         <div className="w-full flex-1">

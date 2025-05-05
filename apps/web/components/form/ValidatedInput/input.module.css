@@ -1,35 +1,5 @@
-.container {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 30px;
-}
-.label {
-  font-weight: 700;
-  font-size: 20px;
-  padding-bottom: 2px;
-}
-.input_container {
-  position: relative;
-  display: inline-block;
-}
-.input {
-  width: 91%;
-  font-weight: 500;
-  font-size: 18px;
-  padding: 5px 0 6px;
-
-  outline: none;
-  border-bottom: 3px solid;
-  border-color: var(--color-green-700);
-  color: var(--color-slate-900);
-}
-.input::placeholder {
-  color: var(--color-gray-400);
-}
-
 .icon_container {
   position: absolute;
-  right: 0px;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
@@ -39,7 +9,7 @@
   height: 22px;
 }
 .icon_valid {
-  color: green;
+  color: var(--color-green-500);
 }
 .icon_invalid {
   color: red;
